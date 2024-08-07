@@ -2,7 +2,7 @@ const app = require('./app');
 const dotenv = require('dotenv');
 dotenv.config({path: 'backend/config/config.env'});
 const connectDatabase = require('./config/database');
-const mysqlPool = require('./config/mysql_database');
+//const mysqlPool = require('./config/mysql_database');
 
 //handling uncaught exceptions
 process.on('uncaughtException', (err) =>{
@@ -14,9 +14,9 @@ process.on('uncaughtException', (err) =>{
 //console.log(testing);
 
 //connectDatabase();
-mysqlPool.query('select 1').then((error)=>{
+/*mysqlPool.query('select 1').then((error)=>{
     console.log('mysql connection established');
-})
+})*/
 
 const server = app.listen(process.env.PORT, () =>{
     console.log('server is working on port '+process.env.PORT);
