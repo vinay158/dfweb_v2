@@ -203,8 +203,17 @@ exports.apiGetAllRecords = catchAsyncErrors(async(req,res, next) => {
         const totalBlogs = totalBlogsResult[0][0].count;
         
         // Fetch blogs with pagination and filtering
-        const blogs = await db.query('SELECT * FROM '+table_name+' order by id desc');
-
+        const [blog_records] = await db.query('SELECT * FROM '+table_name+' order by id desc');
+        
+        // Filter or process rows if needed
+        const blogs = blog_records.map(row => ({
+            id: row.id,
+            title: row.title,
+            slug: row.slug,
+            image: process.env.BACKEND_URL+'/uploads/'+module_slug+'/'+row.image
+        }));
+      
+     
         res.status(200).json({
             success: true,
             totalBlogs,
@@ -223,11 +232,13 @@ exports.apiGetAllRecords = catchAsyncErrors(async(req,res, next) => {
 
 exports.apiGetSingleRecord = catchAsyncErrors(async(req, res,next) => {
 
-    const blog = await QueryModel.findBySpecific(table_name,'slug', req.params.slug, next);
-
+    let blog = await QueryModel.findBySpecific(table_name,'slug', req.params.slug, next);
+    
     if (!blog) {
         return next(new ErrorHandler('Record not found', 500));
     }
+    blog.image = process.env.BACKEND_URL+'/uploads/'+module_slug+'/'+blog.image;
+
     res.status(200).json({
         success: true,
         blog
