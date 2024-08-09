@@ -5,6 +5,8 @@ const catchAsyncErrors = require('../middleware/catchAsyncErrors');
 const ApiFeatures = require('../utils/apiFeatures');
 const db = require('../config/mysql_database');
 const Joi = require('joi');
+const { htmlToText } = require('html-to-text');
+const { format } = require('date-fns');
 
 const table_name = Model.table_name;
 const module_title = Model.module_title;
@@ -211,7 +213,8 @@ exports.apiGetAllRecords = catchAsyncErrors(async(req,res, next) => {
             title: row.title,
             slug: row.slug,
             image: process.env.BACKEND_URL+'/uploads/'+module_slug+'/'+row.image,
-            created_date: row.created,
+            created_date: formatDate(row.created_at),
+            desc: truncateText(htmlToText(row.description), 200),
         }));
       
      
@@ -245,3 +248,13 @@ exports.apiGetSingleRecord = catchAsyncErrors(async(req, res,next) => {
         blog
     });
 });
+
+function truncateText(text, maxLength) {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + '...'; // Truncate and add ellipsis
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return format(date, 'd MMM, yyyy'); // Format in m-d-Y
+}
