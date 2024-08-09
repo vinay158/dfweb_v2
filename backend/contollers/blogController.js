@@ -1,4 +1,4 @@
-const Model = require('../models/serviceModel');
+const Model = require('../models/blogModel');
 const QueryModel = require('../models/queryModel');
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middleware/catchAsyncErrors');
