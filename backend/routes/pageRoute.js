@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require("multer");
 const {addFrom,createRecord,editForm,updateRecord,deleteRecord,getAllRecords,getSingleRecord,deleteImage,apiGetAllRecords,apiGetSingleRecord} = require('../contollers/pageController');
 const { isAuthenticatedUser,authorizeRoles } = require('../middleware/auth');
-const Model = require('../models/serviceModel');
+const Model = require('../models/pageModel');
 const module_slug = Model.module_slug;
 const router = express.Router();
 
