@@ -182,9 +182,8 @@ exports.apiGetAllRecords = catchAsyncErrors(async(req,res, next) => {
         // Filter or process rows if needed
         const blogs = blog_records.map(row => ({
             id: row.id,
-            title: row.title,
-            slug: row.slug,
-            image: process.env.BACKEND_URL+'/uploads/'+module_slug+'/'+row.image
+            question: row.title,
+            answer: row.description
         }));
       
      
