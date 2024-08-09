@@ -1,7 +1,9 @@
 const express = require('express'); 
 const multer = require("multer");
-const {createBlog, getAllBlogs,updateBlog,deleteBlog,getSingleBlog,editBlogForm,addBlogFrom,distory_image } = require('../contollers/blogController');
+const {addFrom,createRecord,editForm,updateRecord,deleteRecord,getAllRecords,getSingleRecord,deleteImage,apiGetAllRecords,apiGetSingleRecord} = require('../contollers/blogController');
 const { isAuthenticatedUser,authorizeRoles } = require('../middleware/auth');
+const Model = require('../models/blogModel');
+const module_slug = Model.module_slug;
 const router = express.Router();
 
 var Storage = multer.diskStorage({
@@ -18,14 +20,17 @@ var Storage = multer.diskStorage({
 var upload = multer({ storage: Storage });
 
 
-router.route('/blogs/add').get(isAuthenticatedUser,authorizeRoles('admin'),addBlogFrom)
-router.route('/blogs/add').post(isAuthenticatedUser,authorizeRoles('admin'),createBlog)
-router.route('/blogs/edit/:id').get(isAuthenticatedUser,authorizeRoles('admin'),editBlogForm)
-router.route('/blogs/update/:id').post(upload.single('image'),isAuthenticatedUser,authorizeRoles('admin'),updateBlog)
-router.route('/blogs/delete/:id').get(isAuthenticatedUser,authorizeRoles('admin'),deleteBlog)
-router.route('/blogs').get(isAuthenticatedUser,authorizeRoles('admin'),getAllBlogs)
-router.route('/blogs/:id').get(isAuthenticatedUser,authorizeRoles('admin'),getSingleBlog)
-router.route("/blogs/delete-image/:id").get(isAuthenticatedUser,authorizeRoles('admin'),distory_image);   
+router.route('/'+module_slug+'/add').get(isAuthenticatedUser,authorizeRoles('admin'),addFrom)
+router.route('/'+module_slug+'/add').post(upload.single('image'),isAuthenticatedUser,authorizeRoles('admin'),createRecord)
+router.route('/'+module_slug+'/edit/:id').get(isAuthenticatedUser,authorizeRoles('admin'),editForm)
+router.route('/'+module_slug+'/update/:id').post(upload.single('image'),isAuthenticatedUser,authorizeRoles('admin'),updateRecord)
+router.route('/'+module_slug+'/delete/:id').get(isAuthenticatedUser,authorizeRoles('admin'),deleteRecord)
+router.route('/'+module_slug+'').get(isAuthenticatedUser,authorizeRoles('admin'),getAllRecords)
+router.route('/'+module_slug+'/:id').get(isAuthenticatedUser,authorizeRoles('admin'),getSingleRecord)
+router.route('/'+module_slug+'/delete-image/:id').get(isAuthenticatedUser,authorizeRoles('admin'),deleteImage);   
 
+/** REST API**/
+router.route('/api-'+module_slug+'').get(apiGetAllRecords)
+router.route('/api-'+module_slug+'/:slug').get(apiGetSingleRecord)
 
 module.exports = router
